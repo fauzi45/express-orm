@@ -37,9 +37,29 @@ const createProjectHelper = async (name) => {
   }
 };
 
+const updateProjectHelper = async (id, name) => {
+  try {
+    const checkProject = await db.projects.findOne({
+      where: { id: id },
+    });
+    if (!checkProject) {
+      throw new Error("Project with this id doesn't exist");
+    }
+    if (checkProject) {
+      await db.projects.update(
+        { name: name ? name : checkProject.dataValues.name },
+        { where: { id: id } }
+      );
+    }
+    return Promise.resolve([]);
+  } catch (error) {
+    throw error;
+  }
+};
 
 module.exports = {
   createProjectHelper,
   getProjectListHelper,
-  getProjectDetailHelper
+  getProjectDetailHelper,
+  updateProjectHelper
 };

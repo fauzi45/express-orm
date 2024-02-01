@@ -53,8 +53,29 @@ const createProject = async (req, res) => {
   }
 };
 
+const updateProject = async (req, res) => {
+  try {
+    ValidationProjectHelper.updateProjectValidation(req.query);
+    const { id } = req.query;
+    const { name } = req.body;
+    const response = await ProjectHelper.updateProjectHelper(id, name);
+    return res
+      .status(200)
+      .send({
+        message: "Project data successfully updated",
+        data: response,
+      });
+  } catch (err) {
+    res.status(400).send({
+      message: "Project data failed to be updated",
+      data: err.message,
+    });
+  }
+};
+
 Router.get('/all', allProject);
 Router.get("/detail", detailProject);
 Router.post("/create", createProject);
+Router.put("/update", updateProject);
 
 module.exports = Router;
