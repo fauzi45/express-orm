@@ -3,7 +3,7 @@ const getDepartmentListHelper = async () => {
   try {
     const response = await db.departments.findAll();
     if (!response) {
-      throw new Error ("There's no data on department");
+      throw new Error("There's no data on department");
     }
     return Promise.resolve(response);
   } catch (error) {
@@ -14,10 +14,10 @@ const getDepartmentListHelper = async () => {
 const getDepartmentDetailHelper = async (id) => {
   try {
     const response = await db.departments.findOne({
-      where: {id: id}
+      where: { id: id },
     });
     if (!response) {
-      throw new Error("Department with this id doesn't exist")
+      throw new Error("Department with this id doesn't exist");
     }
     return Promise.resolve(response.dataValues);
   } catch (error) {
@@ -28,7 +28,7 @@ const getDepartmentDetailHelper = async (id) => {
 const createDepartmentHelper = async (name) => {
   try {
     const response = await db.departments.create({
-      name: name
+      name: name,
     });
     return Promise.resolve(response);
   } catch (error) {
@@ -36,8 +36,29 @@ const createDepartmentHelper = async (name) => {
   }
 };
 
+const updateDepartmentHelper = async (id, name) => {
+  try {
+    const checkDepartment = await db.departments.findOne({
+      where: { id: id },
+    });
+    if (!checkDepartment) {
+      throw new Error("Department with this id doesn't exist");
+    }   
+    if (checkDepartment) {
+      await db.departments.update(
+        { name: name ? name : checkDepartment.dataValues.name },
+        { where: { id: id } }
+      );
+    }
+    return Promise.resolve([]);
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
-    getDepartmentListHelper,
-    getDepartmentDetailHelper,
-    createDepartmentHelper
+  getDepartmentListHelper,
+  getDepartmentDetailHelper,
+  createDepartmentHelper,
+  updateDepartmentHelper,
 };

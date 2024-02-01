@@ -53,8 +53,28 @@ const createDepartment = async (req, res) => {
   }
 };
 
+const updateDepartment = async (req, res) => {
+  try {
+    const { id } = req.query;
+    const { name } = req.body;
+    const response = await DepartmentHelper.updateDepartmentHelper(id, name);
+    return res
+      .status(200)
+      .send({
+        message: "Department data successfully updated",
+        data: response,
+      });
+  } catch (err) {
+    res.status(400).send({
+      message: "Department data failed to be updated",
+      data: err.message,
+    });
+  }
+};
+
 Router.get("/all", allDepartment);
 Router.get("/detail", detailDepartment);
 Router.post("/create", createDepartment);
+Router.put("/update", updateDepartment);
 
 module.exports = Router;
