@@ -81,9 +81,30 @@ const updateEmployeeHelper = async (id, name, position, departmentId) => {
   }
 };
 
+const deleteEmployeeHelper = async (id) => {
+  try {
+    const checkEmployee = await db.employees.findOne({
+      where: { id: id },
+    });
+    if (!checkEmployee) {
+      throw new Error("Employee with this id doesn't exist");
+    } else {
+      await db.employees.destroy({
+        where: {
+          id: id,
+        },
+      });
+    }
+    return Promise.resolve([]);
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   createEmployeeHelper,
   getEmployeeListHelper,
   getEmployeeDetailHelper,
   updateEmployeeHelper,
+  deleteEmployeeHelper
 };
