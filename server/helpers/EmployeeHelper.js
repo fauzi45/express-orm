@@ -14,6 +14,21 @@ const getEmployeeListHelper = async () => {
   }
 };
 
+const getEmployeeDetailHelper = async (id) => {
+  try {
+    const response = await db.employees.findOne({
+      include: 'department',
+      where: { id: id },
+    });
+    if (!response) {
+      throw new Error("Employee with this id doesn't exist");
+    }
+    return Promise.resolve(response.dataValues);
+  } catch (error) {
+    throw error;
+  }
+};
+
 const createEmployeeHelper = async (name, position, departmentId) => {
   try {
     const response = await db.employees.create({
@@ -29,5 +44,6 @@ const createEmployeeHelper = async (name, position, departmentId) => {
 
 module.exports = {
   createEmployeeHelper,
-  getEmployeeListHelper
+  getEmployeeListHelper,
+  getEmployeeDetailHelper
 };
