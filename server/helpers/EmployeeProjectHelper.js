@@ -54,7 +54,28 @@ const createEmployeeProjectHelper = async (employeeId, projectId, role) => {
   }
 };
 
+const deleteEmployeeProjectHelper = async (id) => {
+  try {
+    const checkEmployee = await db.employeeprojects.findOne({
+      where: { id: id },
+    });
+    if (!checkEmployee) {
+      throw new Error("Employee Project with this id doesn't exist");
+    } else {
+      await db.employeeprojects.destroy({
+        where: {
+          id: id,
+        },
+      });
+    }
+    return Promise.resolve([]);
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   createEmployeeProjectHelper,getEmployeeProjectDetailHelper,
   getEmployeeProjectListHelper,
+  deleteEmployeeProjectHelper
 };
