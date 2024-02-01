@@ -3,7 +3,7 @@ const db = require("../../models");
 const getEmployeeListHelper = async () => {
   try {
     const response = await db.employees.findAll({
-      include: 'department'
+      include: "department",
     });
     if (!response) {
       throw new Error("There's no data on Employee");
@@ -17,7 +17,7 @@ const getEmployeeListHelper = async () => {
 const getEmployeeDetailHelper = async (id) => {
   try {
     const response = await db.employees.findOne({
-      include: 'department',
+      include: "department",
       where: { id: id },
     });
     if (!response) {
@@ -31,6 +31,12 @@ const getEmployeeDetailHelper = async (id) => {
 
 const createEmployeeHelper = async (name, position, departmentId) => {
   try {
+    const checkDepartment = await db.departments.findOne({
+      where: { id: departmentId },
+    });
+    if (!checkDepartment) {
+      throw new Error("Department with this id doesn't exist");
+    }
     const response = await db.employees.create({
       name: name,
       position: position,
@@ -45,5 +51,5 @@ const createEmployeeHelper = async (name, position, departmentId) => {
 module.exports = {
   createEmployeeHelper,
   getEmployeeListHelper,
-  getEmployeeDetailHelper
+  getEmployeeDetailHelper,
 };
