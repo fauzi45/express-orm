@@ -73,9 +73,29 @@ const updateProject = async (req, res) => {
   }
 };
 
+const deleteProject = async (req, res) => {
+  try {
+    ValidationProjectHelper.deleteProjectValidation(req.query);
+    const { id } = req.query;
+    const response = await ProjectHelper.deleteProjectHelper(id);
+    return res
+      .status(200)
+      .send({
+        message: "Project data successfully deleted",
+        data: response,
+      });
+  } catch (err) {
+    res.status(400).send({
+      message: "Project data failed to be deleted",
+      data: err.message,
+    });
+  }
+};
+
 Router.get('/all', allProject);
 Router.get("/detail", detailProject);
 Router.post("/create", createProject);
 Router.put("/update", updateProject);
+Router.delete("/delete", deleteProject);
 
 module.exports = Router;

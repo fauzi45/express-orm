@@ -56,9 +56,30 @@ const updateProjectHelper = async (id, name) => {
   }
 };
 
+const deleteProjectHelper = async (id) => {
+  try {
+    const checkProject = await db.projects.findOne({
+      where: { id: id },
+    });
+    if (!checkProject) {
+      throw new Error("Project with this id doesn't exist");
+    } else {
+      await db.projects.destroy({
+        where: {
+          id: id,
+        },
+      });
+    }
+    return Promise.resolve([]);
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   createProjectHelper,
   getProjectListHelper,
   getProjectDetailHelper,
   updateProjectHelper,
+  deleteProjectHelper
 };
