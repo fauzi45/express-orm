@@ -35,9 +35,26 @@ const detailDepartment = async (req, res) => {
   }
 };
 
-
+const createDepartment = async (req, res) => {
+  try {
+    const { name } = req.body;
+    const response = await DepartmentHelper.createDepartmentHelper(name);
+    return res
+      .status(200)
+      .send({
+        message: "Department data successfully created",
+        data: response,
+      });
+  } catch (err) {
+    res.status(400).send({
+      message: "Department data failed to be created",
+      data: err.message,
+    });
+  }
+};
 
 Router.get("/all", allDepartment);
 Router.get("/detail", detailDepartment);
+Router.post("/create", createDepartment);
 
 module.exports = Router;
