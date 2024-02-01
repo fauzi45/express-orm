@@ -48,8 +48,42 @@ const createEmployeeHelper = async (name, position, departmentId) => {
   }
 };
 
+const updateEmployeeHelper = async (id, name, position, departmentId) => {
+  try {
+    
+    if (departmentId) {
+      const checkDepartment = await db.departments.findOne({
+        where: { id: departmentId },
+      });
+      if (!checkDepartment) {
+        throw new Error("Department with this id doesn't exist");
+      }
+    }
+    const checkEmployee = await db.employees.findOne({
+      where: { id: id },
+    });
+    if (!checkEmployee) {
+      throw new Error("Employee with this id doesn't exist");
+    }
+    await db.employees.update(
+      {
+        name: name ? name : checkEmployee.dataValues.name,
+        position: position ? position : checkEmployee.dataValues.position,
+        departmentId: departmentId
+          ? departmentId
+          : checkEmployee.dataValues.departmentId,
+      },
+      { where: { id: id } }
+    );
+    return Promise.resolve([]);
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   createEmployeeHelper,
   getEmployeeListHelper,
   getEmployeeDetailHelper,
+  updateEmployeeHelper,
 };
