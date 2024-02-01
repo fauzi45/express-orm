@@ -3,15 +3,27 @@ const db = require("../../models");
 const getEmployeeProjectListHelper = async () => {
   try {
     const response = await db.employeeprojects.findAll({
-      include: [
-        {model: db.employees},
-        {model: db.projects}
-      ],
+      include: [{ model: db.employees }, { model: db.projects }],
     });
     if (!response) {
       throw new Error("There's no data on Employee Project");
     }
     return Promise.resolve(response);
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getEmployeeProjectDetailHelper = async (id) => {
+  try {
+    const response = await db.employeeprojects.findOne({
+      include: [{ model: db.employees }, { model: db.projects }],
+      where: { id: id },
+    });
+    if (!response) {
+      throw new Error("Employee Project with this id doesn't exist");
+    }
+    return Promise.resolve(response.dataValues);
   } catch (error) {
     throw error;
   }
@@ -25,7 +37,6 @@ const createEmployeeProjectHelper = async (employeeId, projectId, role) => {
     const checkProject = await db.projects.findOne({
       where: { id: projectId },
     });
-
     if (!checkEmployee) {
       throw new Error("Employee with this id doesn't exist");
     }
@@ -35,7 +46,7 @@ const createEmployeeProjectHelper = async (employeeId, projectId, role) => {
     const response = await db.employeeprojects.create({
       employeeId: employeeId,
       projectId: projectId,
-      role
+      role: role,
     });
     return Promise.resolve(response);
   } catch (error) {
@@ -43,8 +54,7 @@ const createEmployeeProjectHelper = async (employeeId, projectId, role) => {
   }
 };
 
-
 module.exports = {
-  createEmployeeProjectHelper,
-  getEmployeeProjectListHelper
+  createEmployeeProjectHelper,getEmployeeProjectDetailHelper,
+  getEmployeeProjectListHelper,
 };

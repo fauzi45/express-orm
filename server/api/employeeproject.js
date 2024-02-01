@@ -17,6 +17,23 @@ const allEmployeeProject = async (req, res) => {
   }
 };
 
+const detailEmployeeProject = async (req, res) => {
+  try {
+    ValidationEmployeeProjectHelper.detailEmployeeProjectValidation(req.query);
+    const { id } = req.query;
+    const response = await EmployeeProjectHelper.getEmployeeProjectDetailHelper(id);
+    return res.status(200).send({
+      message: "Employee Project detail data received successfully",
+      data: response,
+    });
+  } catch (err) {
+    res.status(400).send({
+      message: "Employee Project detail data failed to be received",
+      data: err.message,
+    });
+  }
+};
+
 const createEmployeeProject = async (req, res) => {
   try {
     ValidationEmployeeProjectHelper.createEmployeeProjectValidation(req.body);
@@ -39,5 +56,6 @@ const createEmployeeProject = async (req, res) => {
 };
 
 Router.get("/all", allEmployeeProject);
+Router.get("/detail", detailEmployeeProject);
 Router.post("/create", createEmployeeProject);
 module.exports = Router;
