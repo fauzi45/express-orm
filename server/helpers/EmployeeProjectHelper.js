@@ -54,6 +54,40 @@ const createEmployeeProjectHelper = async (employeeId, projectId, role) => {
   }
 };
 
+const updateEmployeeProjectHelper = async (id, employeeId, projectId, role) => {
+  try {
+    if (employeeId) {
+      const checkEmployee = await db.employees.findOne({
+        where: { id: employeeId },
+      });
+      if (!checkEmployee) {
+        throw new Error("Employee with this id doesn't exist");
+      }
+    }
+
+    const checkEmployeeProject = await db.employeeprojects.findOne({
+      where: { id: id },
+    });
+    if (!checkEmployeeProject) {
+      throw new Error("Employee Project with this id doesn't exist");
+    }
+
+    await db.employeeprojects.update(
+      {
+        employeeId: employeeId ? employeeId : checkEmployeeProject.dataValues.employeeId,
+        projectId: projectId ? projectId : checkEmployeeProject.dataValues.projectId,
+        role: role
+          ? role
+          : checkEmployeeProject.dataValues.role,
+      },
+      { where: { id: id } }
+    );
+    return Promise.resolve([]);
+  } catch (error) {
+    throw error;
+  }
+};
+
 const deleteEmployeeProjectHelper = async (id) => {
   try {
     const checkEmployee = await db.employeeprojects.findOne({
@@ -77,5 +111,6 @@ const deleteEmployeeProjectHelper = async (id) => {
 module.exports = {
   createEmployeeProjectHelper,getEmployeeProjectDetailHelper,
   getEmployeeProjectListHelper,
+  updateEmployeeProjectHelper,
   deleteEmployeeProjectHelper
 };
