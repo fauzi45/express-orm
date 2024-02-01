@@ -21,7 +21,6 @@ const allDepartment = async (req, res) => {
 
 const detailDepartment = async (req, res) => {
   try {
-    ValidationDepartmentHelper.detailDepartmentValidation(req.query);
     const { id } = req.query;
     const response = await DepartmentHelper.getDepartmentDetailHelper(id);
     return res.status(200).send({
@@ -36,68 +35,9 @@ const detailDepartment = async (req, res) => {
   }
 };
 
-const createDepartment = async (req, res) => {
-  try {
-    ValidationDepartmentHelper.createDepartmentValidation(req.body);
-    const { name } = req.body;
-    const response = await DepartmentHelper.createDepartmentHelper(name);
-    return res
-      .status(200)
-      .send({
-        message: "Department data successfully created",
-        data: response,
-      });
-  } catch (err) {
-    res.status(400).send({
-      message: "Department data failed to be created",
-      data: err.message,
-    });
-  }
-};
 
-const updateDepartment = async (req, res) => {
-  try {
-    ValidationDepartmentHelper.updateDepartmentValidation(req.query);
-    const { id } = req.query;
-    const { name } = req.body;
-    const response = await DepartmentHelper.updateDepartmentHelper(id, name);
-    return res
-      .status(200)
-      .send({
-        message: "Department data successfully updated",
-        data: response,
-      });
-  } catch (err) {
-    res.status(400).send({
-      message: "Department data failed to be updated",
-      data: err.message,
-    });
-  }
-};
-
-const deleteDepartment = async (req, res) => {
-  try {
-    ValidationDepartmentHelper.deleteDepartmentValidation(req.query);
-    const { id } = req.query;
-    const response = await DepartmentHelper.deleteDepartmentHelper(id);
-    return res
-      .status(200)
-      .send({
-        message: "Department data successfully deleted",
-        data: response,
-      });
-  } catch (err) {
-    res.status(400).send({
-      message: "Department data failed to be deleted",
-      data: err.message,
-    });
-  }
-};
 
 Router.get("/all", allDepartment);
 Router.get("/detail", detailDepartment);
-Router.post("/create", createDepartment);
-Router.put("/update", updateDepartment);
-Router.delete("/delete", deleteDepartment);
 
 module.exports = Router;
