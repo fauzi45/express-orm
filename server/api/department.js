@@ -72,9 +72,28 @@ const updateDepartment = async (req, res) => {
   }
 };
 
+const deleteDepartment = async (req, res) => {
+  try {
+    const { id } = req.query;
+    const response = await DepartmentHelper.deleteDepartmentHelper(id);
+    return res
+      .status(200)
+      .send({
+        message: "Department data successfully deleted",
+        data: response,
+      });
+  } catch (err) {
+    res.status(400).send({
+      message: "Department data failed to be deleted",
+      data: err.message,
+    });
+  }
+};
+
 Router.get("/all", allDepartment);
 Router.get("/detail", detailDepartment);
 Router.post("/create", createDepartment);
 Router.put("/update", updateDepartment);
+Router.delete("/delete", deleteDepartment);
 
 module.exports = Router;

@@ -43,7 +43,7 @@ const updateDepartmentHelper = async (id, name) => {
     });
     if (!checkDepartment) {
       throw new Error("Department with this id doesn't exist");
-    }   
+    }
     if (checkDepartment) {
       await db.departments.update(
         { name: name ? name : checkDepartment.dataValues.name },
@@ -56,9 +56,31 @@ const updateDepartmentHelper = async (id, name) => {
   }
 };
 
+const deleteDepartmentHelper = async (id) => {
+  try {
+    const checkDepartment = await db.departments.findOne({
+      where: { id: id },
+    });
+    if (!checkDepartment) {
+      throw new Error("Department with this id doesn't exist");
+    }
+    if (checkDepartment) {
+      await db.departments.destroy({
+        where: {
+          id: id,
+        },
+      });
+    }
+    return Promise.resolve([]);
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   getDepartmentListHelper,
   getDepartmentDetailHelper,
   createDepartmentHelper,
   updateDepartmentHelper,
+  deleteDepartmentHelper,
 };
